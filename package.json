@@ -1,12 +1,12 @@
 {
 	"name": "equals182.brackets-power-mode",
 	"title": "Brackets Power Mode",
-	"version": "0.8.0",
-	"description": "The Power Mode.",
-	"homepage": "http://equals182.github.io/BracketsPowerMode/",
+	"version": "0.0.3",
+	"description": "Press Ctrl+Alt+0 to unleash The Power. Only one cursor at a time can have The Power.",
+	"homepage": "https://github.com/Equals182/brackets-power-mode",
 	"author": "Alexander <equals182@gmail.com>",
 	"license": "MIT",
-	"categories": ["livedev","external"],
+	"categories": ["external"],
 	"keywords": ["Power mode"],
 	"engines": {
 		"brackets": ">=1.4.0"
@@ -16,7 +16,7 @@
     ],
     "package-i18n": {
         "en": {
-            "description": "The Power Mode."
+            "description": "Press Ctrl+Alt+0 to unleash The Power. Only one cursor at a time can have The Power."
         }
     }
 }
