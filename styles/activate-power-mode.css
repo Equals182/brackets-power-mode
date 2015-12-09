@@ -1,0 +1,14 @@
+.power-mode {
+    transform: translate3d(0, 0, 0);
+}
+.power-mode-canvas {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+#eqBPM {
+    position: absolute;
+    opacity: 0;
+}

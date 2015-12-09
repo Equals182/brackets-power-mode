@@ -1,0 +1,22 @@
+{
+	"name": "equals182.brackets-power-mode",
+	"title": "Brackets Power Mode",
+	"version": "0.8.0",
+	"description": "The Power Mode.",
+	"homepage": "http://equals182.github.io/BracketsPowerMode/",
+	"author": "Alexander <equals182@gmail.com>",
+	"license": "MIT",
+	"categories": ["livedev","external"],
+	"keywords": ["Power mode"],
+	"engines": {
+		"brackets": ">=1.4.0"
+	},
+    "i18n": [
+        "en"
+    ],
+    "package-i18n": {
+        "en": {
+            "description": "The Power Mode."
+        }
+    }
+}
