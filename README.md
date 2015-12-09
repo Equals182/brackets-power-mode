@@ -1,6 +1,6 @@
 # brackets-power-mode
 A package for Brackets to replicate the effects from [codeinthedark/editor](https://github.com/codeinthedark/editor).  
-Thanks to @JoelBesada for his [plugin](https://github.com/JoelBesada/activate-power-mode)
+Thanks to [JoelBesada](https://github.com/JoelBesada) for his [plugin](https://github.com/JoelBesada/activate-power-mode)
 
 Activate with <kbd>Ctrl</kbd>-<kbd>Alt</kbd>-<kbd>0</kbd> Use the command again to deactivate. 
 
