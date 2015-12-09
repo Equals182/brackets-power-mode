@@ -68,10 +68,10 @@ define(function (require, exports, module) {
             pm.subscribeToActiveTextEditor();
             pm.active = pm.getConfig('active');
             pm.setupCanvas();
-            return requestAnimationFrame(pm.drawParticles.bind(pm));
         },
         particles: {},
         particlePointer: NaN,
+        cml: null,
         subscribeToActiveTextEditor: function () {
             var _ref;
             pm.throttledShake = _.throttle(pm.shake.bind(pm), 100, { trailing: false });
@@ -85,6 +85,7 @@ define(function (require, exports, module) {
             pm.editor.on('keydown', function (e, editor, ke) {
                 pm.onChange(e, editor, ke);
             });
+            requestAnimationFrame(pm.drawParticles.bind(pm));
             if (pm.canvas) {
                 pm.canvas.style.display = "block";
                 return true;
@@ -92,73 +93,32 @@ define(function (require, exports, module) {
         },
         onChange: function (e, editor, ke) {
             var range, spawnParticles;
+            if (!pm.active) {
+                return;
+            }
+            spawnParticles = true;
+
+            if (ke.altKey) {
+                return;
+            }
+            if (ke.keyCode === 37 || ke.keyCode === 38 || ke.keyCode === 39 || ke.keyCode === 40) {
+                return;
+            }
+            if (ke.keyCode === 16 || ke.keyCode === 17) {
+                return;
+            }
             _.delay(function () {
-                if (!pm.active) {
-                    return;
+                if (!pm.cml) {
+                    pm.cml = document.getElementsByClassName('CodeMirror-lines')[0];
                 }
-                spawnParticles = true;
-                
-                if (ke.altKey) {
-                    return;
-                }
-                if (ke.keyCode === 37 || ke.keyCode === 38 || ke.keyCode === 39 || ke.keyCode === 40) {
-                    return;
-                }
-                if (ke.keyCode === 16 || ke.keyCode === 17) {
-                    return;
-                }
-                var curpos = pm.editor.getCursorPos(true);
-                    //tabsize = pm.editor.getTabSize();
-                var row = $('.CodeMirror-linenumber:contains(' + (curpos.line + 1) + ')').closest('.CodeMirror-gutter-wrapper').parent().find('.CodeMirror-line>span:first'),
-                    col = 0,
-                    r = false;
-                row.contents().each(function (i, o) {
-                    col += $(o).text().length;
-                    if (col >= curpos.ch) {
-                        var
-                            original = $(o),
-                            clone = $(original).clone(),
-                            s, t, l, color;
-                        if ($(o)[0].nodeType === 3) {
-                            if ($(o)[0].previousElementSibling) {
-                                s = $($(o)[0].previousElementSibling);
-                            } else {
-                                s = $($(o)[0].parentElement);
-                            }
-                            t = s.offset().top;
-                            l = s.offset().left + s.outerWidth();
-                            color = $($(o)[0].parentNode).css('color');
-                        } else {
-                            t = $(o).offset().top;
-                            l = $(o).offset().left;
-                            color = $(o).css('color');
-                        }
-                        clone.wrap("<div id='eqBPM' class='CodeMirror'></div>")
-                            .parent()
-                            .css('top', t + "px")
-                            .css('left', l + "px")
-                            .width($(pm.editorElement).find('.CodeMirror-sizer > div').width())
-                            .css('word-wrap', ($(pm.editorElement).hasClass('CodeMirror-wrap')) ? "break-word" : "")
-                            .prependTo("body");
-                        
-                        var m = $(clone).text(),
-                            w = $(clone).text().length - (col - curpos.ch),
-                            str = m.substring(0, (w - 1)) + "<span id='eqBPM-i'>" + m.substring(w - 1, w) + "</span>" + m.substring(w);
-                        if ($(clone)[0].nodeType === 3) {
-                            $(clone).replaceWith(str);
-                        } else {
-                            $(clone).html(str);
-                        }
-                        r = {
-                            pos: $('#eqBPM span#eqBPM-i').offset(),
-                            color: color,
-                            width: $('#eqBPM span#eqBPM-i').outerWidth(),
-                            height: $('#eqBPM span#eqBPM-i').outerHeight()
-                        };
-                        $("#eqBPM").remove();
-                        return false;
-                    }
-                });
+                pm.cml.style.pointerEvents = "all";
+                var pos = pm.editor._codeMirror.cursorCoords(),
+                    node = document.elementFromPoint(pos.left - 5, pos.top + 5);
+                pm.cml.style.pointerEvents = "none";
+                var r = {
+                        pos: pos,
+                        color: getComputedStyle(node).color 
+                    }; 
                 if (ke.keyCode === 13) {
                     //spawnParticles = false;
                 }
@@ -206,8 +166,7 @@ define(function (require, exports, module) {
             _ref = range.pos;
             left = _ref.left;
             top = _ref.top;
-            left += range.width;
-            top += range.height;
+            top += parseFloat(window.getComputedStyle(pm.editorElement, null).getPropertyValue('font-size'));
             color = range.color;
             numParticles = random(pm.getConfig("particles.spawnCount.min"), pm.getConfig("particles.spawnCount.max"));
             _results = [];
