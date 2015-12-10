@@ -71,7 +71,6 @@ define(function (require, exports, module) {
         },
         particles: {},
         particlePointer: NaN,
-        cml: null,
         subscribeToActiveTextEditor: function () {
             var _ref;
             pm.throttledShake = _.throttle(pm.shake.bind(pm), 100, { trailing: false });
@@ -108,16 +107,11 @@ define(function (require, exports, module) {
                 return;
             }
             _.delay(function () {
-                if (!pm.cml) {
-                    pm.cml = document.getElementsByClassName('CodeMirror-lines')[0];
-                }
-                pm.cml.style.pointerEvents = "all";
                 var pos = pm.editor._codeMirror.cursorCoords(),
                     node = document.elementFromPoint(pos.left - 5, pos.top + 5);
-                pm.cml.style.pointerEvents = "none";
                 var r = {
                         pos: pos,
-                        color: getComputedStyle(node).color 
+                        color: getComputedStyle(node).color || "rgba(255,255,255,1)"
                     }; 
                 if (ke.keyCode === 13) {
                     //spawnParticles = false;
@@ -212,7 +206,6 @@ define(function (require, exports, module) {
                 //pm.context.fillRect(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size, size);
                 pm.context.beginPath();
                 pm.context.arc(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size / 2, 0, 2 * Math.PI, false);
-                pm.context.fillStyle = "rgba(" + particle.color.slice(4, -1) + ", " + particle.alpha + ")";
                 pm.context.fill();
             }
             pm.context.globalCompositeOperation = gco;

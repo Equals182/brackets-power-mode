@@ -8,3 +8,6 @@
     left: 0;
     pointer-events: none;
 }
+.CodeMirror-lines {
+    pointer-events: all !important;
+}
