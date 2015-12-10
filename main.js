@@ -214,10 +214,14 @@ define(function (require, exports, module) {
                 particle.velocity.y += 0.075;
                 particle.x += particle.velocity.x;
                 particle.y += particle.velocity.y;
-                particle.alpha *= 0.96;
+                particle.alpha *= 0.90;
                 pm.context.fillStyle = "rgba(" + particle.color.slice(4, -1) + ", " + particle.alpha + ")";
                 size = random(pm.getConfig("particles.size.min"), pm.getConfig("particles.size.max"), true);
-                pm.context.fillRect(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size, size);
+                //pm.context.fillRect(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size, size);
+                pm.context.beginPath();
+                pm.context.arc(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size / 2, 0, 2 * Math.PI, false);
+                pm.context.fillStyle = "rgba(" + particle.color.slice(4, -1) + ", " + particle.alpha + ")";
+                pm.context.fill();
             }
             pm.context.globalCompositeOperation = gco;
             return true;
