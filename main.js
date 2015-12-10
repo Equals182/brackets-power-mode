@@ -71,6 +71,7 @@ define(function (require, exports, module) {
         },
         particles: {},
         particlePointer: NaN,
+        cml: null,
         subscribeToActiveTextEditor: function () {
             var _ref;
             pm.throttledShake = _.throttle(pm.shake.bind(pm), 100, { trailing: false });
@@ -107,25 +108,16 @@ define(function (require, exports, module) {
                 return;
             }
             _.delay(function () {
-                var curpos = pm.editor.getCursorPos(true);
-                var row = $('.CodeMirror-linenumber:contains(' + (curpos.line + 1) + ')').closest('.CodeMirror-gutter-wrapper').parent().find('.CodeMirror-line>span:first'),
-                    col = 0,
-                    color;
-                row.contents().each(function (i, o) {
-                    col += $(o).text().length;
-                    if (col >= curpos.ch) {
-                        if ($(o)[0].nodeType === 3) {
-                            color = $($(o)[0].parentNode).css('color');
-                        } else {
-                            color = $(o).css('color');
-                        }
-                        return false;
-                    }
-                });
-                var pos = pm.editor._codeMirror.cursorCoords();
+                if (!pm.cml) {
+                    pm.cml = document.getElementsByClassName('CodeMirror-lines')[0];
+                }
+                pm.cml.style.pointerEvents = "all";
+                var pos = pm.editor._codeMirror.cursorCoords(),
+                    node = document.elementFromPoint(pos.left - 5, pos.top + 5);
+                pm.cml.style.pointerEvents = "none";
                 var r = {
                         pos: pos,
-                        color: color
+                        color: getComputedStyle(node).color 
                     }; 
                 if (ke.keyCode === 13) {
                     //spawnParticles = false;
