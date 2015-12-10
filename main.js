@@ -178,7 +178,7 @@ define(function (require, exports, module) {
                 color: color,
                 velocity: {
                     x: -1 + Math.random() * 2,
-                    y: -3.5 + Math.random() * 2
+                    y: -3.5 + Math.random() * 3
                 }
             };
         },
@@ -197,10 +197,10 @@ define(function (require, exports, module) {
                 if (particle.alpha <= 0.1) {
                     continue;
                 }
-                particle.velocity.y += 0.075;
+                particle.velocity.y += 0.175;
                 particle.x += particle.velocity.x;
                 particle.y += particle.velocity.y;
-                particle.alpha *= 0.90;
+                particle.alpha *= 0.93;
                 pm.context.fillStyle = "rgba(" + particle.color.slice(4, -1) + ", " + particle.alpha + ")";
                 size = random(pm.getConfig("particles.size.min"), pm.getConfig("particles.size.max"), true);
                 //pm.context.fillRect(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size, size);
