@@ -1,4 +1,8 @@
 # brackets-power-mode
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Equals182/brackets-power-mode/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+
 A package for Brackets to replicate the effects from [codeinthedark/editor](https://github.com/codeinthedark/editor).  
 Thanks to [JoelBesada](https://github.com/JoelBesada) for his [plugin](https://github.com/JoelBesada/activate-power-mode)
 
