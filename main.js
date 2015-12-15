@@ -67,10 +67,16 @@ define(function (require, exports, module) {
             pm.particles = [];
             pm.subscribeToActiveTextEditor();
             pm.active = pm.getConfig('active');
+            requestAnimationFrame(pm.drawParticles.bind(pm));
             pm.setupCanvas();
         },
-        particles: {},
-        particlePointer: NaN,
+        particles: [],
+        particlePointer: 0,
+        debouncedClearing: _.debounce(function() {
+            pm.context.clearRect(0, 0, pm.canvas.width, pm.canvas.height);
+            pm.particlePointer = 0;
+            pm.particles = [];
+        }.bind(pm), 900, { leading: false, trailing: true }),
         subscribeToActiveTextEditor: function () {
             var _ref;
             pm.throttledShake = _.throttle(pm.shake.bind(pm), 100, { trailing: false });
@@ -84,7 +90,6 @@ define(function (require, exports, module) {
             pm.editor.on('keydown', function (e, editor, ke) {
                 pm.onChange(e, editor, ke);
             });
-            requestAnimationFrame(pm.drawParticles.bind(pm));
             if (pm.canvas) {
                 pm.canvas.style.display = "block";
                 return true;
@@ -123,6 +128,7 @@ define(function (require, exports, module) {
                     return pm.throttledShake();
                 }
             }, 3);
+            pm.debouncedClearing();
         },
         setupCanvas: function () {
             if ($('#power-mode-canvas').length === 0) {
@@ -187,29 +193,31 @@ define(function (require, exports, module) {
             if (pm.active) {
                 requestAnimationFrame(pm.drawParticles.bind(pm));
             }
-            pm.canvas.width = pm.editorElement.offsetWidth + $(pm.editorElement).offset().left;
-            pm.canvas.height = pm.editorElement.offsetHeight + $(pm.editorElement).offset().top;
-            gco = pm.context.globalCompositeOperation;
-            pm.context.globalCompositeOperation = "lighter";
-            _ref = pm.particles;
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                particle = _ref[_i];
-                if (particle.alpha <= 0.1) {
-                    continue;
+            if ($(pm.editorElement).length > 0) {
+                pm.canvas.width = $(pm.editorElement).width() + $(pm.editorElement).offset().left;
+                pm.canvas.height = $(pm.editorElement).height() + $(pm.editorElement).offset().top;
+                gco = pm.context.globalCompositeOperation;
+                pm.context.globalCompositeOperation = "lighter";
+                _ref = pm.particles;
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                    particle = _ref[_i];
+                    if (particle.alpha <= 0.1) {
+                        continue;
+                    }
+                    particle.velocity.y += 0.175;
+                    particle.x += particle.velocity.x;
+                    particle.y += particle.velocity.y;
+                    particle.alpha *= 0.93;
+                    pm.context.fillStyle = "rgba(" + particle.color.slice(4, -1) + ", " + particle.alpha + ")";
+                    size = random(pm.getConfig("particles.size.min"), pm.getConfig("particles.size.max"), true);
+                    //pm.context.fillRect(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size, size);
+                    pm.context.beginPath();
+                    pm.context.arc(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size / 2, 0, 2 * Math.PI, false);
+                    pm.context.fill();
                 }
-                particle.velocity.y += 0.175;
-                particle.x += particle.velocity.x;
-                particle.y += particle.velocity.y;
-                particle.alpha *= 0.93;
-                pm.context.fillStyle = "rgba(" + particle.color.slice(4, -1) + ", " + particle.alpha + ")";
-                size = random(pm.getConfig("particles.size.min"), pm.getConfig("particles.size.max"), true);
-                //pm.context.fillRect(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size, size);
-                pm.context.beginPath();
-                pm.context.arc(Math.round(particle.x - size / 2), Math.round(particle.y - size / 2), size / 2, 0, 2 * Math.PI, false);
-                pm.context.fill();
+                pm.context.globalCompositeOperation = gco;
+                return true;
             }
-            pm.context.globalCompositeOperation = gco;
-            return true;
         },
         toggle: function () {
             pm.active = !pm.active;
@@ -219,7 +227,7 @@ define(function (require, exports, module) {
             preferences.set("active", pm.active);
             preferences.save();
             
-            return requestAnimationFrame(pm.drawParticles.bind(pm));
+            return true;
         }
     };
     CommandManager.register('Activate Power Mode', 'activate-power-mode', function () {

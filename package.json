@@ -1,7 +1,7 @@
 {
 	"name": "equals182.brackets-power-mode",
 	"title": "Brackets Power Mode",
-	"version": "0.0.3",
+	"version": "0.0.5",
 	"description": "Press Ctrl+Alt+0 to unleash The Power. Only one cursor at a time can have The Power.",
 	"homepage": "https://github.com/Equals182/brackets-power-mode",
 	"author": "Alexander <equals182@gmail.com>",
